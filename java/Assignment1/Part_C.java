@@ -43,6 +43,7 @@ class Part_C {
         for(int i=start;i<end;i++){
             A[i/rowSize][i%rowSize] = random.nextDouble()*10;
             B[i/rowSize][i%rowSize] = random.nextDouble()*10;
+            C[i/rowSize][i%rowSize] = 0;
         }
     }
 

@@ -3,18 +3,15 @@ class Part_B {
     //this variable contains total number of points
     static int noOfPoints = 10000001;
 
-    //this variable is equal to delta which is eual to (1-(-1))/noOfPoints
+    //this variable is equal to delta which is eual to (1-(-1))/(noOfPoints-1)
     static double delta = (double)2 / (noOfPoints-1);
-
-    //this variable will conatain the estimated value of our integration
-    double ans = 0;
     
     //this is a class that will implement Runnable interface to have thread functionality
     public class TaskThread extends Thread{
         int threadId;
         int noOfThreads;
 
-        double valueOfIntegration = 0;
+        double partialSum = 0;
 
         //constructor which will help us to assign threadId and total number of threads
         TaskThread(int threadId,int noOfThreads){
@@ -24,25 +21,37 @@ class Part_B {
 
         //contains all the logic which will run on the thread
         public void run(){
+            //will compute the partialSum of function assigned to each thread 
             compute();
         }
 
         void compute(){
+            //start variable for i where i is lower bound of interval 
             int start = threadId*(noOfPoints/noOfThreads);
+
+            //end variable for i where i is lower bound of interval 
             int end;
+
+            //if thread is last thread by threadId
             if(threadId==(noOfThreads-1)){
+                //if thread is last thread it will have extra points which are left after distribution among the threads
                 end=noOfPoints;
             }else{
                 end = ((threadId+1)*(noOfPoints/noOfThreads));
             }
+
             for(int i=start;i<end;i++){
+
+                //if it is the first or last point we will add 1*function value as seen from the series
                 if(i==0||i==(noOfPoints-1)){
-                    valueOfIntegration+=(1*function((i*delta)-1));
+                    partialSum += (1*function((i*delta)-1));
                 }else{
+                    //if it is even term in the series we will add 4*function value as seen from the series
                     if(i%2==1){
-                        valueOfIntegration+=(4*function((i*delta)-1));
+                        partialSum += (4*function((i*delta)-1));
                     }else{
-                        valueOfIntegration+=(2*function((i*delta)-1));
+                    //if it is odd term in the series we will add 4*function value as seen from the series
+                        partialSum += (2*function((i*delta)-1));
                     }
                 }
             }
@@ -100,27 +109,34 @@ class Part_B {
 
         long startTime = System.currentTimeMillis();
 
-        //made an array of threads whose length is equal to number of threads required to estimate the value of pi
+        //made an array of TaskThread object type whose length is equal to number of threads required to estimate the value of integration
         TaskThread threads[] = new TaskThread[noOfThreads];
 
         //this for loop will start the execution of all the threads
         for(int i=0;i<noOfThreads;i++){
 
-            //making an object of class TaskThread
+            //making an object of class TaskThread and passing thread specific value to constructor
             TaskThread taskThread = new TaskThread(i,noOfThreads);
 
-            //assign element of thread array to the required thread which will execute the run function in TaskThread class
+            //assign element of ThreadTask array to the specific object
             threads[i] = taskThread;
 
             //it will start the execution of thread which will run the run method of TaskThread class
             threads[i].start();
         }
+
+        //this variable will conatain the sum of contribution of function at all the points
+        double sum_of_function_value = 0;
         
         //we will wait for all the threads to complete their execution and die
         for(int i=0;i<noOfThreads;i++){
             try {
+                //will wait for the i(th) thread to die
                 threads[i].join();
-                ans+=(threads[i].valueOfIntegration);
+
+                //will add the sum contribution of each thread
+                sum_of_function_value += (threads[i].partialSum);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -128,11 +144,13 @@ class Part_B {
 
         long endTime = System.currentTimeMillis();
 
+        //time elapsed for computing the answer using given number of threads
         long timeElapsed = endTime - startTime;
         System.out.println("Execution time in milliseconds: " + timeElapsed);
 
-        System.out.println(ans*delta/3);
-        
-        //System.out.println("Estimated value of integration is: "+ (delta*valueOfIntegration/3));
+        //computing value of integration by formula value of integration = ((delta)/3)*(sum)
+        double valueOfIntegration = (sum_of_function_value*delta)/3;
+
+        System.out.println(valueOfIntegration);
     }
 }

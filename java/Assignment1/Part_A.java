@@ -83,7 +83,6 @@ class Part_A {
     //our code will first run this method
     public static void main(String args[]){
         try {
-
             Part_A part_A = new Part_A();
 
             //we will run the run method
@@ -156,7 +155,9 @@ class Part_A {
 
         long endTime = System.currentTimeMillis();
 
+        //time elapsed for computing the answer using given number of threads
         long timeElapsed = endTime - startTime;
+
         System.out.println("Execution time in milliseconds: " + timeElapsed);
 
         //estimate the value of pi from the number of points inside circle
