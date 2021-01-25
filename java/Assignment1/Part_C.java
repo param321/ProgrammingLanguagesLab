@@ -1,12 +1,20 @@
 import java.util.Random;
 
 class Part_C {
+
+    //contains the number of rows of our 2-D square matrix
     static int rowSize = 1000;
 
+    //total number of elements in our matrix
     static int totalNoOfCells = rowSize*rowSize;
 
+    //Our 2-D suare matrix A
     double A[][] = new double[rowSize][rowSize];
+
+    //Our 2-D suare matrix B
     double B[][] = new double[rowSize][rowSize];
+
+    //Our 2-D square matrix C which will be equal to A x B
     double C[][] = new double[rowSize][rowSize];
 
     public class InitializeThread implements Runnable{
@@ -36,7 +44,6 @@ class Part_C {
             A[i/rowSize][i%rowSize] = random.nextDouble()*10;
             B[i/rowSize][i%rowSize] = random.nextDouble()*10;
         }
-        System.out.println(threadId);
     }
 
     public class MultiplyThread implements Runnable{
@@ -68,9 +75,9 @@ class Part_C {
             }
             C[i/rowSize][i%rowSize]=ans;
         }
-        System.out.println(threadId);
     }
 
+    //our code will first run this method
     public static void main(String args[]){
         try {
             Part_C part_C = new Part_C();
@@ -81,18 +88,25 @@ class Part_C {
 
     }
 
+    //this contains all the main code
     public void run(String args[]){
+
+        //error if no arguments given 
         if(args.length==0){
             System.out.println("Error!! Please Enter an argument which should be number of threads");
             return;
         }
 
+        //error of more than one arguments given
         if(args.length>1){
             System.out.println("Error!! Please Enter only one argument which should be number of threads");
             return;
         }
 
+        //variable will store number of threads 
         int noOfThreads;
+
+        //will check that the argument given is a integer or not and assign it to the variable noOfThreads
         try{
             noOfThreads = Integer.parseInt(args[0]);
         }catch(Exception e){
@@ -100,6 +114,7 @@ class Part_C {
             return;
         }
 
+        //will check that number of threads are in range [4,16]
         if(noOfThreads<4||noOfThreads>16){
             System.out.println("Error!! Numbers of threads should be between 4 and 16");
             return;
@@ -141,13 +156,13 @@ class Part_C {
 
         long timeElapsed = endTime - startTime;
 
-        for(int i=0;i<rowSize;i++){
-            for(int j=0;j<rowSize;j++){
-                System.out.print(C[i][j]);
-                System.out.print(' ');
-            }
-            System.out.print('\n');
-        }
+        // for(int i=0;i<rowSize;i++){
+        //     for(int j=0;j<rowSize;j++){
+        //         System.out.print(C[i][j]);
+        //         System.out.print(' ');
+        //     }
+        //     System.out.print('\n');
+        // }
 
         System.out.println("Execution time in milliseconds: " + timeElapsed);
     }
