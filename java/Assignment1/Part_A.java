@@ -1,3 +1,12 @@
+//How To Run
+//In the terminal to compile java code enter command : javac Part_A.java
+//then to run the code enter command : java Part_A <Number_of_threads>
+//Number_of_threads should be a number between 4 and 16 both inclusive
+
+//Output
+//First it will print Execution time to calculate the estimated value of pi in miliseconds
+//then it will print the estimated value of pi
+
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -126,6 +135,7 @@ class Part_A {
             return;
         }
 
+        //start the time
         long startTime = System.currentTimeMillis();
 
         //made an array of threads whose length is equal to number of threads required to estimate the value of pi

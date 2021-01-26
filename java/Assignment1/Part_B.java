@@ -1,3 +1,12 @@
+//How To Run
+//In the terminal to compile java code enter command : javac Part_B.java
+//then to run the code enter command : java Part_B <Number_of_threads>
+//Number_of_threads should be a number between 4 and 16 both inclusive
+
+//Output
+//First it will print Execution time to calculate the approximate value of given integration in miliseconds
+//then it will print the approximate value of given integration
+
 class Part_B {
 
     //this variable contains total number of points
@@ -11,6 +20,7 @@ class Part_B {
         int threadId;
         int noOfThreads;
 
+        //store partial sum of functions assigned to each thread
         double partialSum = 0;
 
         //constructor which will help us to assign threadId and total number of threads
@@ -107,9 +117,10 @@ class Part_B {
             return;
         }
 
+        //start the time
         long startTime = System.currentTimeMillis();
 
-        //made an array of TaskThread object type whose length is equal to number of threads required to estimate the value of integration
+        //made an array of TaskThread object type whose length is equal to number of threads required to calculate approximate value of integration
         TaskThread threads[] = new TaskThread[noOfThreads];
 
         //this for loop will start the execution of all the threads
@@ -151,6 +162,7 @@ class Part_B {
         //computing value of integration by formula value of integration = ((delta)/3)*(sum)
         double valueOfIntegration = (sum_of_function_value*delta)/3;
 
+        System.out.print("The approximate value of integration using "+args[0]+" threads is: ");
         System.out.println(valueOfIntegration);
     }
 }
