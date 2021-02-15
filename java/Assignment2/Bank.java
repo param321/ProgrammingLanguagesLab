@@ -1,5 +1,7 @@
 import java.util.*;
 import java.io.*;
+import java.util.concurrent.ExecutorService; 
+import java.util.concurrent.Executors;
 
 class Bank{ 
 
@@ -53,7 +55,7 @@ class Bank{
                     }
                 }
 
-                balance = random.nextInt(1000000000);
+                balance = (random.nextInt(1000000))+((long)1000000000);
                 Customer customer = new Customer(accountNumber, balance);
                 branchCustomers.add(customer);
 
@@ -92,7 +94,7 @@ class Bank{
             }
 
             if(!customerFound){
-                System.out.println("Customer Not Found");
+                //System.out.println("Customer Not Found");
                 return;
             }
 
@@ -131,14 +133,14 @@ class Bank{
             }
 
             if(!customerFound){
-                System.out.println("Customer Not Found");
+                //System.out.println("Customer Not Found");
                 return;
             }
 
             long currentBalance = customer.getBalance();
 
             if(currentBalance<withdrawAmount){
-                System.out.println("Not Enough Balance");
+                //System.out.println("Not Enough Balance");
                 return;
             }
 
@@ -184,7 +186,7 @@ class Bank{
             }
 
             if(!sourceCustomerFound){
-                System.out.println("Source Customer Not Found");
+                //System.out.println("Source Customer Not Found");
                 return;
             }
 
@@ -199,7 +201,7 @@ class Bank{
             }
 
             if(!destinationCustomerFound){
-                System.out.println("Destination Customer Not Found");
+                //System.out.println("Destination Customer Not Found");
                 return;
             }
 
@@ -207,7 +209,7 @@ class Bank{
             long destinationBalance = destinationCustomer.getBalance();
 
             if(sourceBalance<transferAmount){
-                System.out.println("Not Enough Balance in Source Account");
+                //System.out.println("Not Enough Balance in Source Account");
                 return;
             }
 
@@ -228,7 +230,7 @@ class Bank{
 
         AddCustomer(int updaterNumber){
             this.branch = updaterNumber;
-            this.balance = random.nextInt(1000000000);
+            this.balance = (random.nextInt(1000000))+((long)1000000000);
             this.accountNumber = Long.toString((long)(updaterNumber*(long)1000000000) + (long)counter[updaterNumber]);
             counter[updaterNumber]++;
             if(updaterNumber==0){
@@ -272,7 +274,7 @@ class Bank{
             }
 
             if(!customerFound){
-                System.out.println("Customer not found");
+                //System.out.println("Customer not found");
                 return;
             }
             customerList.get(branch).remove(pos);
@@ -315,7 +317,7 @@ class Bank{
             }
 
             if(!customerFound){
-                System.out.println("Customer not found");
+                //System.out.println("Customer not found");
                 return;
             }
 
@@ -368,110 +370,106 @@ class Bank{
             return;
         }
 
-        long startTime = System.currentTimeMillis();
+        long timeStart = System.currentTimeMillis();
 
         makeCustomerList();
 
-        System.out.println(customerList.get(0).size());
-        System.out.println(customerList.get(1).size());
-
-        Thread threads[] = new Thread[1];
-
-        //this for loop will start the execution of all the threads to initialize matrices A and B 
-        for(int i=0;i<1;i++){
-
-            TransferCustomer depositCash = new TransferCustomer("0000000000",1);
-
-            //assign element of thread array to the required thread which will execute the run function in InitializeThread class
-            threads[i] = new Thread(depositCash);
-
-            //it will start the execution of thread which will run the run method of InitializeThread class
-            threads[i].start();
+        ExecutorService executorServices[] = new ExecutorService[10];
+        
+        for(int i=0;i<10;i++){
+            executorServices[i] = Executors.newFixedThreadPool(10);
         }
 
-        for(int i=0;i<1;i++){
-            try {
-                threads[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        int sourceBranch;
+        int destinationBranch;
+        int amount;
+        int accInBranch;
+        String accountNumber;
+        String destinationAccountNumber;
+        for(int i=0;i<noOfTransPerUpdater;i++){
+            double randomVariable = random.nextDouble();
+            if(randomVariable<0.33){
+                sourceBranch = random.nextInt(10);
+                amount = random.nextInt(100000);
+                accInBranch = random.nextInt(10000);
+                accountNumber = Long.toString(((long)sourceBranch*(long)1000000000)+(long)accInBranch);
+                if(sourceBranch==0){
+                    while(accountNumber.length()<10){
+                        accountNumber="0"+accountNumber;
+                    }
+                }
+                executorServices[sourceBranch].execute(new DepositCash(amount,accountNumber));
+            }else if(randomVariable<0.66){
+                sourceBranch = random.nextInt(10);
+                amount = random.nextInt(100000);
+                accInBranch = random.nextInt(10000);
+                accountNumber = Long.toString(((long)sourceBranch*(long)1000000000)+(long)accInBranch);
+                if(sourceBranch==0){
+                    while(accountNumber.length()<10){
+                        accountNumber="0"+accountNumber;
+                    }
+                }
+                executorServices[sourceBranch].execute(new WithdrawCash(amount,accountNumber));
+            }else if(randomVariable<0.99){
+                amount = random.nextInt(100000);
+
+                sourceBranch = random.nextInt(10);
+                accInBranch = random.nextInt(10000);
+                accountNumber = Long.toString(((long)sourceBranch*(long)1000000000)+(long)accInBranch);
+                if(sourceBranch == 0){
+                    while(accountNumber.length()<10){
+                        accountNumber="0"+accountNumber;
+                    }
+                }
+
+                destinationBranch = random.nextInt(10);
+                accInBranch = random.nextInt(10000);
+                destinationAccountNumber = Long.toString(((long)destinationBranch*(long)1000000000)+(long)accInBranch);
+                if(destinationBranch == 0){
+                    while(destinationAccountNumber.length()<10){
+                        destinationAccountNumber = "0" + destinationAccountNumber;
+                    }
+                }
+
+                executorServices[sourceBranch].execute(new TransferMoney(amount,accountNumber,destinationAccountNumber));
+            }else if(randomVariable<0.993){
+                sourceBranch = random.nextInt(10);
+                executorServices[sourceBranch].execute(new AddCustomer(sourceBranch));
+            }else if(randomVariable<0.996){
+                sourceBranch = random.nextInt(10);
+                accInBranch = random.nextInt(10000);
+                accountNumber = Long.toString(((long)sourceBranch*(long)1000000000)+(long)accInBranch);
+                if(sourceBranch == 0){
+                    while(accountNumber.length()<10){
+                        accountNumber="0"+accountNumber;
+                    }
+                }
+
+                executorServices[sourceBranch].execute(new DeleteCustomer(accountNumber));
+            }else{
+                sourceBranch = random.nextInt(10);
+                accInBranch = random.nextInt(10000);
+                accountNumber = Long.toString(((long)sourceBranch*(long)1000000000)+(long)accInBranch);
+                if(sourceBranch == 0){
+                    while(accountNumber.length()<10){
+                        accountNumber="0"+accountNumber;
+                    }
+                }
+
+                destinationBranch = random.nextInt(10);
+                executorServices[sourceBranch].execute(new TransferCustomer(accountNumber,destinationBranch));
             }
         }
 
-        System.out.println(customerList.get(0).size());
-        System.out.println(customerList.get(1).get(10000).getAccountNumber());
+        for(int i=0;i<10;i++){
+            executorServices[i].shutdown();
+            while(!executorServices[i].isTerminated()){
+                
+            }
+        }
 
-        long endTime = System.currentTimeMillis();
-        long timeElapsed = endTime - startTime;
+        long timeEnd = System.currentTimeMillis();
+        long timeElapsed = timeEnd - timeStart;
         System.out.println("Execution time in milliseconds: " + timeElapsed);
-
-        //start the time
-        // long startTime = System.currentTimeMillis();
-
-        //BankData bankDate = new BankData();
-
-        // //made an array of threads whose length is equal to number of threads required
-        // Thread threads[] = new Thread[noOfThreads];
-
-        // //this for loop will start the execution of all the threads to initialize matrices A and B 
-        // for(int i=0;i<noOfThreads;i++){
-
-        //     //making an object of class InitializeThread
-        //     InitializeThread initializeThread = new InitializeThread(i,noOfThreads);
-
-        //     //assign element of thread array to the required thread which will execute the run function in InitializeThread class
-        //     threads[i] = new Thread(initializeThread);
-
-        //     //it will start the execution of thread which will run the run method of InitializeThread class
-        //     threads[i].start();
-        // }
-
-        // //we will wait for all the threads to complete their execution and die
-        // for(int i=0;i<noOfThreads;i++){
-        //     try {
-        //         threads[i].join();
-        //     } catch (InterruptedException e) {
-        //         e.printStackTrace();
-        //     }
-        // }
-
-        // //this for loop will start the execution of all the threads to compute matric C(A X B)
-        // for(int i=0;i<noOfThreads;i++){ 
-
-        //     //making an object of class MultiplyThread
-        //     MultiplyThread multiplyThread = new MultiplyThread(i,noOfThreads);
-
-        //     //assign element of thread array to the required thread which will execute the run function in MultiplyThread class
-        //     threads[i] = new Thread(multiplyThread);
-
-        //     //it will start the execution of thread which will run the run method of MultiplyThread class
-        //     threads[i].start();
-        // }
-
-        // //we will wait for all the threads to complete their execution and die
-        // for(int i=0;i<noOfThreads;i++){
-        //     try {
-        //         threads[i].join();
-        //     } catch (InterruptedException e) {
-        //         e.printStackTrace();
-        //     }
-        // }
-
-        // //time elapsed for computing the answer using given number of threads
-        // long endTime = System.currentTimeMillis();
-
-        // long timeElapsed = endTime - startTime;
-
-        // //print the resultant matrix C(A X B)
-        // for(int i=0;i<rowSize;i++){
-        //     for(int j=0;j<rowSize;j++){
-        //         System.out.print(C[i][j]);
-        //         System.out.print(' ');
-        //     }
-        //     System.out.print('\n');
-        // }
-
-        // System.out.println("Number of threads: " + args[0]);
-
-        // System.out.println("Execution time in milliseconds: " + timeElapsed);
     }
 }
