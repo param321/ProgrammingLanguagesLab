@@ -23,10 +23,11 @@
 -- Input : 10000,54,2344,1212,45,12
 -- Output : [10000,54,2344,1212,45,12]
 
+--this function parse each number from comma seperated numbers and return the number and also indicated using a flag that we have parsed all the numbers or not
 getNumber :: IO (Int,String)  
 getNumber = do 
     c <- getChar  
-    if c == '\n'|| c == ','  then 
+    if c == '\n'|| c == ','  then --if delimiter is encountered returrn the number
         if c == ',' then
             return (1,"")
         else
@@ -39,21 +40,22 @@ getNumber = do
         else 
             return (1,c:s)
 
+-- this function converts comma seperated numbers to list of numbers
 getList :: IO [Integer]
 getList = do 
     (flag,x) <- getNumber
-    if x == "" then
+    if x == "" then --if there are no numbers left
         return []
     else do
-        let int = read x :: Integer
-        if flag == 0 then
+        let int = read x :: Integer --converts string to integer
+        if flag == 0 then --if the line has ended
             return [int]
         else
             do
-            xs <- getList
+            xs <- getList --re calling the function to add other numbers to list
             return (int:xs)
 
 main :: IO ()
 main = do
-    z <- getList
+    z <- getList -- we will get the list in variable z
     print z
