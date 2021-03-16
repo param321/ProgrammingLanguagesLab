@@ -9,11 +9,12 @@
 -- 2.) then type the command : ":l fibonacci.hs" to load the function
 -- 3.) the type the command : fibonacci <number> to test the fibonacci function on the number
 
-fibonacci :: Int -> Integer
-fibonacci i = recu i 0 1
-  where
-    recu 0 a b = a
-    recu i a b = recu (i-1) b (a+b)
+fibonacci :: Int -> Integer --function type
+fibonacci i = 
+  recu i 0 1 --expression to be calculated using where condition
+    where --where condition
+      recu 0 a b = a --base condition
+      recu i a b = recu (i-1) b (a+b) --recursion relation
 
 main = do 
     -- 10 test cases

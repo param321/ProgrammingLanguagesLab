@@ -9,14 +9,14 @@
 -- 2.) then type the command : ":l squareRoot.hs" to load the function
 -- 3.) the type the command : squareRoot <number> to test the squareRoot function on the number
 
-squareRootFun :: (Ord a, Fractional a) => a -> a -> a -> a
-squareRootFun lowerBound number upperBound
-  | upperBound - lowerBound < 0.0000001 = upperBound
-  | (((lowerBound + upperBound)/2) * ((lowerBound + upperBound)/2)) >= number = squareRootFun lowerBound number ((lowerBound + upperBound) / 2)
-  | otherwise = squareRootFun ((lowerBound + upperBound) / 2) number upperBound
+squareRootFun :: (Ord a, Fractional a) => a -> a -> a -> a --function type
+squareRootFun lowerBound number upperBound --the function calculates square root of the number with lower bound and upper bound
+  | upperBound - lowerBound < 0.0000001 = upperBound --if the error is less than 0.0000001 then end the binary search and return the answer
+  | (((lowerBound + upperBound)/2) * ((lowerBound + upperBound)/2)) >= number = squareRootFun lowerBound number ((lowerBound + upperBound) / 2) --if the square of mid value is greater than number then assign upperbound to mid
+  | otherwise = squareRootFun ((lowerBound + upperBound) / 2) number upperBound --if the square of mid value is less than number then assign lowerbound to mid
 
-squareRoot :: (Ord a, Fractional a) => a -> a
-squareRoot number = squareRootFun 0 number (max 1 number)
+squareRoot :: (Ord a, Fractional a) => a -> a --function type
+squareRoot number = squareRootFun 0 number (max 1 number) --assign upperbound and lowerbound to binary search and return the square root of the number
 
 main = do
     --10 test cases

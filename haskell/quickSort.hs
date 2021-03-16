@@ -9,18 +9,19 @@
 -- 2.) then type the command : ":l quickSort.hs" to load the function
 -- 3.) the type the command : quickSort <list of numbers> to test the quickSort function on the list
 
-quickSort :: Ord a => [a] -> [a]
-quickSort [] = []
-quickSort (x : xs) =
-  quickSort leftarray ++ [x] ++ quickSort rightarray
+quickSort :: Ord a => [a] -> [a] --function type
+quickSort [] = [] 
+quickSort (firstElement : remainingElements) = --this function will return us the sorted list using quick sort
+  quickSort small++[firstElement]++quickSort large --recurrence relation
   where
-    leftarray = [i | i <- xs, i <= x]
-    rightarray = [i | i <- xs, i > x]
+    --extracting elements which are less and grater than the first element in the remainingElements
+    small = [i|i<-remainingElements,i<=firstElement] 
+    large = [i|i<-remainingElements,i>firstElement]
 
 main = do 
     -- 10 test cases
 
-    let x =[3,2,1]
+    let x =[12, 2, 4, 5, 18]
     print (quickSort x)
 
     let x =[1]
