@@ -1,3 +1,17 @@
+-- How to Run
+
+-- To run the code and to input the comma seperated numbers:
+-- 1.) in the code directory type the command: ghc -o partA partA.hs
+-- 2.) then type the command: ./partA 
+-- 3.) Give the input (comma seperated numbers in the format "number1,number2,number3" for example "1,2,3,4,5") and then press enter
+-- 4.) Output list is generated and printed
+
+-- To load the function (use getList function to convert comma seperated numbers to list):
+-- 1.) in the code directory type the command : ghci
+-- 2.) then type the command : ":l partA.hs" to load the function
+-- 3.) the type the command : getList 
+-- 3.) Give the input (comma seperated numbers in the format "number1,number2,number3" for example "1,2,3,4,5") and then press enter
+-- 4.) Output list printed
 
 getNumber :: IO (Int,String)  
 getNumber = do 
@@ -15,9 +29,8 @@ getNumber = do
         else 
             return (1,c:s)
 
-
-getArray :: IO [Integer]
-getArray = do 
+getList :: IO [Integer]
+getList = do 
     (flag,x) <- getNumber
     if x == "" then
         return []
@@ -27,12 +40,10 @@ getArray = do
             return [int]
         else
             do
-            xs <- getArray
+            xs <- getList
             return (int:xs)
-
-
 
 main :: IO ()
 main = do
-    z <- getArray
+    z <- getList
     print z
