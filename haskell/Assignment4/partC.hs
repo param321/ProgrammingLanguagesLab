@@ -13,6 +13,35 @@
 -- 3.) Give the input (comma seperated numbers in the format "number1,number2,number3" for example "1,2,3,4,5") and then press enter
 -- 4.) BST , inorder of BST , preorder of BST, postorder of BST are printed respectively
 
+--Test Cases
+-- Input : 1,2,3,4,5,6
+-- Output : 
+-- Node Null 1 (Node Null 2 (Node Null 3 (Node Null 4 (Node Null 5 (Node Null 6 Null)))))
+-- [1,2,3,4,5,6]
+-- [1,2,3,4,5,6]
+-- [6,5,4,3,2,1]
+--
+-- Input : 11
+-- Output : 
+-- Node Null 11 Null
+-- [11]
+-- [11]
+-- [11]
+--
+-- Input : 10000,54,2344,1212,45,12
+-- Output : 
+-- Node (Node (Node (Node Null 12 Null) 45 Null) 54 (Node (Node Null 1212 Null) 2344 Null)) 10000 Null
+-- [12,45,54,1212,2344,10000]
+-- [10000,54,45,12,2344,1212]
+-- [12,45,1212,2344,54,10000]
+--
+-- Input : 10,15
+-- Output : 
+-- Node Null 10 (Node Null 15 Null)
+-- [10,15]
+-- [10,15]
+-- [15,10]
+
 getNumber :: IO (Int,String)  
 getNumber = do 
     c <- getChar  
@@ -60,7 +89,7 @@ insertListElementsToBST tr (h:t) = insertListElementsToBST (insertNode tr h) t
 
 listToBST :: Ord a => [a] -> BST a
 listToBST [] = Null
-listToBST (h:t) = insertListElementsToBST (Node Null h Null) t 
+listToBST (x:xs) = insertListElementsToBST (Node Null x Null) xs 
 
 inorder :: BST a -> [a]
 inorder Null = []

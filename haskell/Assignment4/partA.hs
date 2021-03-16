@@ -13,6 +13,16 @@
 -- 3.) Give the input (comma seperated numbers in the format "number1,number2,number3" for example "1,2,3,4,5") and then press enter
 -- 4.) Output list printed
 
+--Test Cases
+-- Input : 1,2,3,4,5,6
+-- Output : [1,2,3,4,5,6]
+--
+-- Input : 11
+-- Output : [11]
+--
+-- Input : 10000,54,2344,1212,45,12
+-- Output : [10000,54,2344,1212,45,12]
+
 getNumber :: IO (Int,String)  
 getNumber = do 
     c <- getChar  
